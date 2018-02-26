@@ -1,4 +1,4 @@
-package util;
+package com.mockserverlibrary.util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URL;

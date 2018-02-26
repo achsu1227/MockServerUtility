@@ -25,4 +25,9 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
+
+    testCompile "org.unitils:unitils-core:3.3"
+    testCompile 'com.google.guava:guava:20.0'
+    testCompile group: 'commons-codec', name: 'commons-codec', version: '1.9'
+    testCompile(project(':mockserverlibrary'))
 }
