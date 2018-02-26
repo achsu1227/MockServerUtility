@@ -5,10 +5,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.e104.exception.E104RemoteException;
-import com.e104.helper.QueryMapUtils;
-import com.e104.helper.UrlEncodeUtils;
-
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 
@@ -124,7 +120,7 @@ public class MockUtil {
             if (mockWebServer == null) {
                 mockWebServer = new MockWebServer();
             }
-            mockWebServer.setDispatcher(getDispatcher(mockFile, mockPath, query, null));
+            mockWebServer.setDispatcher(getDispatcher(mockFile, mockPath, null));
 
             if (!isStart) {
                 mockWebServer.start();
@@ -153,7 +149,7 @@ public class MockUtil {
             if (mockWebServer == null) {
                 mockWebServer = new MockWebServer();
             }
-            mockWebServer.setDispatcher(getDispatcher(mockFile, mockPath, query, mOnApiParams));
+            mockWebServer.setDispatcher(getDispatcher(mockFile, mockPath, mOnApiParams));
 
             if (!isStart) {
                 mockWebServer.start();
@@ -170,11 +166,11 @@ public class MockUtil {
         }
     }
 
-    private static Dispatcher getDispatcher(final String mockFile, final String mockPath, final Map query, final OnApiParams mOnApiParams) {
+    private static Dispatcher getDispatcher(final String mockFile, final String mockPath, final OnApiParams mOnApiParams) {
         Dispatcher dispatcher = new Dispatcher() {
             @Override
             public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
-                checkParameterEqual(request, query, mOnApiParams);
+                checkParameterEqual(request, mOnApiParams);
 
                 if (request.getPath().contains(mockPath)) {
                     return MockUtil.readFile(mockFile);
@@ -186,7 +182,7 @@ public class MockUtil {
         return dispatcher;
     }
 
-    private static HashMap<String, String> checkParameterEqual(RecordedRequest request, Map<String, String> query, final OnApiParams mOnApiParams) {
+    private static HashMap<String, String> checkParameterEqual(RecordedRequest request, final OnApiParams mOnApiParams) {
         HashMap<String, String> resultMap = new HashMap<String, String>();
 
         HashMap<String, String> resultQueryMap = getQueryParams(request);
@@ -251,7 +247,7 @@ public class MockUtil {
     }
 
     public interface OnApiTest {
-        void doApiTest(String domain) throws E104RemoteException;
+        void doApiTest(String domain);
     }
 
     public interface OnApiParams {
