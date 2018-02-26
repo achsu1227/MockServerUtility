@@ -2,6 +2,7 @@ package util;
 
 import java.io.IOException;
 import java.io.InputStream;
+
 import org.apache.commons.codec.binary.Base64OutputStream;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 

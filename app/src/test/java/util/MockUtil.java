@@ -71,6 +71,26 @@ public class MockUtil {
         return inputStream;
     }
 
+    /**
+     * 釋放mockServer資源.
+     */
+    public static void releaseMockServer() {
+        if (mockWebServer != null) {
+            try {
+                mockWebServer.shutdown();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            isStart = false;
+        }
+    }
+
+    /**
+     * 設定mockwebserver.
+     * @param dispatcher Dispatcher
+     * @param mockPath mock path
+     * @param mOnApiTest callBack
+     */
     public static void requestWithDispatcher(Dispatcher dispatcher, String mockPath, OnApiTest mOnApiTest) {
         MockWebServer mockWebServer = new MockWebServer();
         mockWebServer.setDispatcher(dispatcher);   //dispatcher见下文
@@ -94,25 +114,10 @@ public class MockUtil {
     }
 
     /**
-     * 釋放mockServer資源.
-     */
-    public static void releaseMockServer() {
-        if (mockWebServer != null) {
-            try {
-                mockWebServer.shutdown();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            isStart = false;
-        }
-    }
-
-    /**
-     * 設定mockwebsertmock response file , mock path
-     * @param mockFile
-     * @param mockPath
-     * @param query
-     * @param mOnApiTest
+     * 設定mockwebserver.
+     * @param mockFile mock response file
+     * @param mockPath mock path
+     * @param mOnApiTest callBack
      */
     public static void requestWithFile(String mockFile, String mockPath, OnApiTest mOnApiTest) {
         try {
@@ -136,8 +141,14 @@ public class MockUtil {
         }
     }
 
+    /**
+     * 設定mockwebserver.
+     * @param mockFile mock response file
+     * @param mockPath mock path
+     * @param mOnApiTest OnApiTest callBack
+     * @param mOnApiParams OnApiParams callBack
+     */
     public static void requestWithFile(String mockFile, String mockPath, OnApiTest mOnApiTest, OnApiParams mOnApiParams) {
-
         try {
             if (mockWebServer == null) {
                 mockWebServer = new MockWebServer();
