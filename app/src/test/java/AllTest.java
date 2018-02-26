@@ -3,6 +3,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
+import com.mockserverlibrary.util.MockUtil;
+import com.mockserverlibrary.util.QueryMapUtils;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,8 +15,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import util.MockUtil;
-import util.QueryMapUtils;
+
 
 /**
  * Created by ac on 2017/11/16.
@@ -23,6 +24,9 @@ import util.QueryMapUtils;
 public class AllTest {
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+    public static final MediaType COMMOM = MediaType.parse("application/x-www-form-urlencoded; charset=utf-8");
+
     private Map mQueryMap = new HashMap();
 
     @Before
@@ -36,16 +40,18 @@ public class AllTest {
         MockUtil.requestWithFile("mock_server_error.json", "test.php" , new MockUtil.OnApiTest(){
             @Override
             public void doApiTest(String domain) {
+                domain = "http://" + domain;
+
                 // avoid creating several instances, should be singleon
                 OkHttpClient client = new OkHttpClient();
 
                 Request request = new Request.Builder()
-                        .url(domain + "/test.php?" + QueryMapUtils.urlEncodeMap2String(mQueryMap))
+                        .url(domain + "/test.php?" + QueryMapUtils.queryToQueryString(QueryMapUtils.urlEncodeMap(mQueryMap)))
                         .build();
 
                 try {
                     Response response = client.newCall(request).execute();
-                    response.body().string();
+                    System.out.print(response.body().string());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -67,13 +73,15 @@ public class AllTest {
             public void doApiTest(String domain) {
 
                 //BaseProxy.API_SERVER = domain;
-
+                domain = "http://" + domain;
                 // avoid creating several instances, should be singleon
                 OkHttpClient client = new OkHttpClient();
 
-                String json = "{'test1':'888', 'test2':'777'}";
+                //String json = "{'test1':'888', 'test2':'777'}";
 
-                RequestBody body = RequestBody.create(JSON, json);
+                String bodyConent = QueryMapUtils.queryToQueryString(QueryMapUtils.urlEncodeMap(mQueryMap));
+
+                RequestBody body = RequestBody.create(COMMOM, bodyConent);
 
                 Request request = new Request.Builder()
                         .url(domain + "/test.php")
@@ -82,7 +90,7 @@ public class AllTest {
 
                 try {
                     Response response = client.newCall(request).execute();
-                    response.body().string();
+                    System.out.print(response.body().string());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

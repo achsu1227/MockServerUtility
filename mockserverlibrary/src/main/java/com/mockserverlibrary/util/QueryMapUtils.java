@@ -1,4 +1,4 @@
-package util;
+package com.mockserverlibrary.util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -98,7 +98,7 @@ public class QueryMapUtils {
      * @param query
      * @return
      */
-    public static Map urlEncodeMap2String(Map<String, String> query) {
+    public static Map urlEncodeMap(Map<String, String> query) {
         Map queryMap = new HashMap<String, String>();
 
         if (query != null && query.size() > 0) {
@@ -113,5 +113,18 @@ public class QueryMapUtils {
         }
 
         return queryMap;
+    }
+
+    public static String queryToQueryString(Map<String, String> query) {
+        StringBuffer queryStr = new StringBuffer();
+        if (query != null && query.size() > 0) {
+            Set<String> keys = query.keySet();
+            for (String key : keys) {
+                queryStr.append(key).append("=").append(query.get(key))
+                        .append("&");
+            }
+            queryStr.deleteCharAt(queryStr.length() - 1);
+        }
+        return queryStr.toString();
     }
 }
