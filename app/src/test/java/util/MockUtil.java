@@ -36,7 +36,6 @@ public class MockUtil {
      */
     public static MockResponse readFile(String fileName) {
         InputStream jsonStream = MockUtil.class.getClassLoader().getResourceAsStream(fileName);
-        //byte[] jsonBytes = IOUtils.toByteArray(jsonStream);
         try {
             return new MockResponse().setResponseCode(200).setBody(new Buffer().readFrom(jsonStream));
         } catch (IOException e) {
@@ -53,8 +52,6 @@ public class MockUtil {
      */
     public static String readFile2String(String fileName) {
         InputStream jsonStream = MockUtil.class.getClassLoader().getResourceAsStream(fileName);
-        //byte[] jsonBytes = IOUtils.toByteArray(jsonStream);
-
         try {
             return IOUtils.toString(jsonStream, "utf-8");
         } catch (IOException e) {
@@ -96,6 +93,9 @@ public class MockUtil {
         }
     }
 
+    /**
+     * 釋放mockServer資源.
+     */
     public static void releaseMockServer() {
         if (mockWebServer != null) {
             try {
@@ -107,12 +107,17 @@ public class MockUtil {
         }
     }
 
-    public static void requestWithFile(String mockFile, String mockPath, Map query, OnApiTest mOnApiTest) {
-
+    /**
+     * 設定mockwebsertmock response file , mock path
+     * @param mockFile
+     * @param mockPath
+     * @param query
+     * @param mOnApiTest
+     */
+    public static void requestWithFile(String mockFile, String mockPath, OnApiTest mOnApiTest) {
         try {
             if (mockWebServer == null) {
                 mockWebServer = new MockWebServer();
-                //MockWebServer mockWebServer = new MockWebServer();
             }
             mockWebServer.setDispatcher(getDispatcher(mockFile, mockPath, query, null));
 
@@ -128,22 +133,14 @@ public class MockUtil {
             Assert.assertFalse(true);
         } catch (Exception e) {
             Assert.assertFalse(true);
-            //releaseMockServer();
-        } /*finally {
-            try {
-                mockWebServer.shutdown();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }*/
+        }
     }
 
-    public static void requestWithFile(String mockFile, String mockPath, Map query, OnApiTest mOnApiTest, OnApiParams mOnApiParams) {
+    public static void requestWithFile(String mockFile, String mockPath, OnApiTest mOnApiTest, OnApiParams mOnApiParams) {
 
         try {
             if (mockWebServer == null) {
                 mockWebServer = new MockWebServer();
-                //MockWebServer mockWebServer = new MockWebServer();
             }
             mockWebServer.setDispatcher(getDispatcher(mockFile, mockPath, query, mOnApiParams));
 
@@ -159,14 +156,7 @@ public class MockUtil {
             Assert.assertFalse(true);
         } catch (Exception e) {
             Assert.assertFalse(true);
-            //releaseMockServer();
-        } /*finally {
-            try {
-                mockWebServer.shutdown();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }*/
+        }
     }
 
     private static Dispatcher getDispatcher(final String mockFile, final String mockPath, final Map query, final OnApiParams mOnApiParams) {
